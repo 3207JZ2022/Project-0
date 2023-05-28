@@ -1,0 +1,32 @@
+.page-body{
+    padding:0% 10%;
+    min-height: calc(100vh - 3em - 4em);
+}
+
+.profile-nav{
+    display:flex;
+    padding:12px 0px;
+}
+
+.profile-nav a{
+    margin-right: 15px;
+    padding-bottom: 2px;
+    text-decoration: none;
+    color: rgb(173, 173, 173);
+    transition-duration: 0.5 ease;
+    font-size: 1.1em;
+}
+
+.profile-nav a:hover{
+    color: rgb(85, 85, 85);
+
+}
+.profile-nav a.active{
+    font-size: 1.2em;
+    color: rgb(85, 85, 85);
+    text-decoration: underline;
+}
+
+.page-content{
+    width: 100%;
+}
