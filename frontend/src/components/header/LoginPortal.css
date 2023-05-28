@@ -1,0 +1,10 @@
+.login-portal-container{
+    overflow:visible;
+    white-space: nowrap;
+}
+
+.login-portal-container a{
+    cursor: pointer;
+}
+
+

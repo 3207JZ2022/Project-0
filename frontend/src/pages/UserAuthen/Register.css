@@ -1,0 +1,133 @@
+.register-container{
+    background-image: url(../../imgs/cubes.png);
+    height: 100vh;
+    background-color: rgb(171, 171, 171);
+    z-index: -2;
+}
+
+.form-container {
+    display: flex;
+    height: calc(100vh - 3em);
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-result{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 0px 8px 25px;
+    width: 300px;
+    height: fit-content;
+    font-size: 17px;
+    border-radius: 15px;
+    color: white;
+    background-color: rgba(16, 16, 16, 0.8);
+    z-index: 3;
+    left:calc((100% - 325px )/2);
+    top:40%;
+}
+
+.form-title{
+    position: relative;
+    bottom:0.3em;
+    color: rgb(255, 255, 255);
+    font-size: 5em;
+    right:0.2em;
+}
+
+.split-line{
+    width: 100%;
+    border-bottom: 4px solid #ffffff;
+}
+
+.form-input-list{
+    padding: 0;
+}
+
+.form-input-list li{
+    list-style: none;
+}
+
+
+.form-input{
+    width:200px;
+    height: 30px;
+    margin:5px 0px;
+    border-radius: 4px;
+    padding-left: 0.5em;
+    border-style: none;
+
+}
+
+.form-input:focus{
+    outline-color: rgb(233, 233, 233);
+    box-shadow: 0px 0px 5px 2px rgb(255, 255, 255);
+    background-color: white;
+}
+
+.form-input:focus::placeholder{
+    color:transparent;
+}
+
+.form-btn-container{
+    width: 100%;
+    position: relative;
+}
+
+.form-btn-container .redirect{
+    padding:5px 5px;
+    font-size: 1em;
+    border-radius: 3px;
+    border-style: none;
+    background-color: transparent;
+    color:rgb(29, 29, 29);
+}
+.form-btn-container .redirect:hover{
+    color: white;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 0.5);
+
+}
+
+.form-btn-container .submit{
+    position: absolute;
+    right: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 3px;
+    border-style: none;
+    color:rgb(255, 255, 255);
+    font-size: 1em;
+}
+
+.form-btn-container .submit:hover{
+    background-color: rgba(255, 255, 255, .8);
+    color: rgba(0, 0, 0, 1);
+}
+
+.form-btn-container .submit:disabled{
+    background-color: rgba(255, 255, 255, .8);
+    color: rgba(0, 0, 0, 1);
+}
+
+
+@media only screen and (max-width: 540px){
+
+    .form-container {
+        flex-direction:column;
+        width: 100%;
+    }
+
+    .form-title{
+        align-content: center;
+        right: 0px;
+    }
+
+    .register-form{
+        position: relative;
+        bottom:1em;
+    }
+}

@@ -1,0 +1,40 @@
+
+.contact-page{
+    height: calc(100vh - 7em);
+
+}
+
+.contact-body{
+    background: url(../imgs/cubes.png);
+    background-color: rgba(234, 35, 35, 0.796);
+
+
+    height: 100%;
+    padding: 0% 10%;
+}
+
+.contact-list{
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px 10px 0px;
+    color:rgb(28, 28, 28)
+}
+
+.contact-list-item{
+    padding: 2px 0px;
+}
+
+.contact-list a{
+    text-decoration: none;
+    /* color:rgb(24, 33, 28); */
+    color: #e1e1e1;
+    background-color: #00000033;
+    padding: 0px 12px 2px;
+    border-radius:12px;
+    transition-duration: 100ms;
+}
+
+.contact-list a:hover{
+    color: white;
+    background-color: rgba(0, 0, 0, 0.6);
+}

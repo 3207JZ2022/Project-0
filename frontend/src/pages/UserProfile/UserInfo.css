@@ -1,0 +1,101 @@
+.user-info-container{
+    position: relative;
+}
+.change-profile-result{
+    position:absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0px 8px;
+    left:calc((100% - 300px )/2);
+    top:35%;
+    width: 300px;
+    height: fit-content;
+    font-size: 18px;
+    border-radius: 15px;
+    color: white;
+    background-color: rgba(16, 16, 16, 0.8);
+    z-index: 3;
+}
+
+
+.user-info-item{
+    margin-bottom: 10px;
+    padding: 12px 20px;
+    height: 200px;
+    background: url(../../imgs/autumn-5.png);
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgb(160, 160, 160);
+    border-radius: 5px;
+    height: 180px;
+}
+
+.user-info-title{
+    color: rgb(43, 43, 43);
+    font-size:22px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding-left: 3px;
+    border-radius: 3px;
+    padding-bottom: 2px;
+    outline: 0.5px solid rgba(247, 247, 247, 0.2);
+
+}
+
+.change-profile-form{
+    height: 80%;
+    display: flex;
+    align-items:center;
+    position:relative;
+}
+
+.user-form-input-list{
+    position: relative;
+    width: 100%;
+    text-align: center;
+}
+
+.user-form-input{
+    left: 50%;
+    width:200px;
+    height: 30px;
+    margin:5px 0px;
+    border-radius: 4px;
+    padding-left: 0.5em;
+    border-style: none;
+    box-shadow: 0px 0px 5px 2px rgb(255, 255, 255);
+    background-color: white;
+    outline: 0.5px solid rgba(53, 53, 53, 0.2);
+
+}
+
+.user-form-input:focus{
+    outline: 0.5px solid rgb(53, 53, 53);
+
+}
+
+.change-btn{
+    position: absolute;
+    right: 10px;
+    bottom: 0px;
+    padding: 4px 10px;
+    border-radius: 5px;
+    border: 0.5px solid rgb(134, 134, 134);
+    background-color: rgb(74, 74, 74);
+    color:rgb(228, 228, 228)
+    
+}
+
+.change-btn:hover{
+    color:rgb(90, 90, 90);
+    background-color: rgb(255, 255, 255);
+    border: 0.5px solid rgb(179, 179, 179);
+
+}
+
+@media only screen and (max-width: 540px){
+    .user-info-item{
+        background-position: bottom;
+    }
+
+}

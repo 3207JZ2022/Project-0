@@ -1,0 +1,15 @@
+.user-profile-container{
+    color:rgb(37, 37, 37);  
+    position: absolute;
+    right: 10%;
+    top: 3.5em;
+    width: 35px;
+    height: 35px;
+    z-index: 999;
+}
+@media only screen and (max-width: 720px){
+    .user-profile-container{
+        right: 20px;
+    }
+
+}

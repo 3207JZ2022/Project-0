@@ -1,0 +1,27 @@
+
+.not-found-page{
+    background: url(../imgs/6325254.jpg) no-repeat;
+    background-size: contain;
+    background-position: center;
+    height: calc(100vh - 3em);
+}
+
+.not-found-text-container{
+    position: relative;
+    top:50px;
+}
+.not-found-text{
+    text-align: center;
+    font-family:'Courier New', Courier, monospace Times;
+    color:rgb(60, 71, 74);
+}
+
+.atribute{
+    position: absolute;
+    bottom: 40px;
+    text-align: center;
+    width: 100%;
+    text-decoration: none;
+    color:rgb(60, 71, 74);
+}
+
