@@ -12,7 +12,7 @@ export default function UserWorks() {
     const [formResult, setResult] = useState("");
     const [disabled, setDisabled] = useState(true);
     const [text, setText] = useState("");
-    const descriptionRef = useRef();
+    const uploadRef = useRef();
     function handleDescriptionChange(event) {
         setText(event.target.value);
       }
@@ -40,40 +40,14 @@ export default function UserWorks() {
         })
         .then((result)=>{
             if(result.username){
-              setUsername(result.username);
+              setUsername("userworks/"+result.username);
             }else{
               navigate('/login')  
             }
         })
         .catch((err)=>{console.log(err)});
     },[])
-    // find own works
-    useEffect(()=>{
-        if(username){
-            fetch("http://localhost:8000/profile/userworks/"+username,{
-              method: "POST",
-              mode: "cors",
-              cache: "no-cache",
-              credentials: "include", 
-              headers: { 
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json, text/javascript, image/jpg'
-              }
-          })
-          .then((response)=>{
-              return response.json();
-          })
-          .then((result)=>{
-              if(result.handle){
-                handleMesseage(result.handle, 4000);
-              }else{
-                setItems(result.data);
-              }
-
-          })
-          .catch((err)=>{console.log(err)});
-          }
-    },[username])
+  
 
 
     const [file, setFile] = useState(null);
@@ -106,7 +80,8 @@ export default function UserWorks() {
         }else{
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('description', descriptionRef.current.value)
+            formData.append('description', uploadRef.current.description.value);
+            formData.append("title", uploadRef.current.title.value);    
             fetch('http://localhost:8000/profile/works/upload', {
                 method: 'POST',
                 mode: "cors",
@@ -135,15 +110,14 @@ export default function UserWorks() {
         <h5 className='submit-work-result' style={{whiteSpace: "pre-line"}}>{formResult}</h5>
         :""}
         <h4 className="work-header">Upload Your Works:</h4>
- 
         <div className="upload-work-container">
             <div className="work-header">
             </div>
-            
-            <form className="upload-work-form" onSubmit={handleSubmit}>
+            <form className="upload-work-form" onSubmit={handleSubmit} ref={uploadRef}>
                 <input className='upload-btn' type="file" onChange={handleFileUpload} />
-                <textarea className='file-description' placeholder='Add the description' maxLength="300"
-                value={text} onChange={handleDescriptionChange} ref={descriptionRef}
+                <input className='file-title' type="text" name="title" placeholder='Add a title' maxLength="32" />
+                <textarea className='file-description' placeholder='Add a description' maxLength="300"
+                name="description" value={text} onChange={handleDescriptionChange}  
                  />
                 <p className='description-limit'>Length: {text.length + "/300"}</p>
                 <button className='upload-submit-btn' type="submit" disabled={disabled} >Upload</button>
@@ -157,7 +131,7 @@ export default function UserWorks() {
         
             <h4 className="work-header">Your Works:</h4>
             <div className="user-favorites-container">
-                {items[0]? <FavoriteItems likedItems={items} /> : <h1></h1>}
+                {items? <FavoriteItems username={username}  /> : <h1></h1>}
             </div>
         </div>
     </div>

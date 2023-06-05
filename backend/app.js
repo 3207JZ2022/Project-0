@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const passport = require('./config/passport-config');
 const {passportInit} = require('./config/passport-config');
 const fileUpload = require('express-fileupload');
-const fs = require('fs');
 
 require("./config/mongoose.js");
 
@@ -17,8 +16,8 @@ const app= express();
 
 const mySQLquery = require('./routes/mySQLquery.js');
 const authentication= require('./routes/authentication.js')
-const allUserAllow= require('./routes/allUserAllow.js')
 const userProfile= require('./routes/userProfile.js')
+const product= require('./routes/product.js');
 const oneDay = 1000 * 60 * 60 * 24;
 
 
@@ -50,11 +49,10 @@ app.use(passport.session());
 passportInit();
 
 
-
 app.use('/',authentication);
-app.use('/', allUserAllow);
 app.use('/', mySQLquery);
 app.use('/', userProfile);
+app.use('/',product);
   
 
 app.listen(8000, function(req, res){

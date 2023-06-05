@@ -58,13 +58,6 @@ const router = createBrowserRouter([{element:<Header />},
   }
 ])
 
-// function Router(){
-//   return (<div>
-// <Routes>
-//   <Route path='/' element = {<App />}/>
-//   <Route path='/login' element = {<Login />}></Route>
-// </Routes>
-//   </div>)
-// }
+
 
 export default router;

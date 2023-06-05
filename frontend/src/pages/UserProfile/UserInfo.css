@@ -74,6 +74,33 @@
 
 }
 
+.show-pwd-container{
+    display: flex;
+    justify-content:center;
+    width:100%;
+    position: relative;
+}
+
+.profile-show-pwd{
+    position:absolute;
+    top: 4px;
+    right: calc(50% - 50px);
+}
+
+.profile-show-pwd:hover{
+    color:rgba(36, 27, 27, 0.511);
+}
+
+.profile-show-pwd.false{
+    position:absolute;
+    display: none;
+}
+
+.profile-show-pwd.true{
+    position:absolute;
+    display: block;
+}
+
 .change-btn{
     position: absolute;
     right: 10px;

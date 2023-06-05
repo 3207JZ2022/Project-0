@@ -9,85 +9,52 @@ import './Products.css'
 
 export default function Products() {
     const [params] = useSearchParams();
-    const id=params.get('id');
-
+    const releasedID=params.get('releasedID');
     const navigate = useNavigate();
 
     // load page
     const[productData, setProductData] = useState({})
-    const[like, setLike]= useState(false)
+    const[productImgs, setProductImgs] = useState([]);
 
+    // obtain product information
     useEffect(()=>{
-        fetch("http://localhost:8000/product/" + id )
+        fetch("http://localhost:8000/product/" + releasedID )
         .then(response => response.json())
         .then(data=>{
-            if(data[0]){
-                let temp={};
-                temp.title=data[0].title;
-                temp.alt=data[0].alt;
-                temp.description=data[0].descrip;
-                temp.id=data[0].id;
-                temp.src=[];
-                data.map((x,index)=>{
-                    temp.src.push(  "http://localhost:8000/imgs/" +x.src)
-                })
-                setProductData(temp);
-            }
-
-
+            let temp=data.map((x, index)=>{
+                if(!x.title.trim()){
+                    x.title="No Title";
+                }
+                return {
+                    title:x.title,
+                    description:x.descrip,
+                    author:x.author,
+                    releasedID: x.releasedID
+                }
+            })
+            setProductData(temp);
         })
     }, []
     );
 
-    useEffect(() => {
-        fetch('http://localhost:8000/user/likes/'+id,{
-            method:"POST",
-            mode:"cors",
-            credentials: "include", 
-            headers: { 
-            'Content-Type':'application/json',
-            'Accept':'application/json'
-            }
-        })
+    //obtain product images
+    useEffect(()=>{
+        fetch("http://localhost:8000/productthumbs/" + releasedID )
         .then(response => response.json())
         .then(data=>{
-            setLike(data.like);
-        });
-    },[])
+            if(data[0]){
+                let temp=[];
+                data.map((x,index)=>{
+                    temp.push("http://localhost:8000/productthumblist/" +x.src)
+                })
+                setProductImgs(temp);
+            }
+        })
+    }, []
+    );
 
-    // like-button event
-    const [disable, setDisable]=useState(true);
-  
-    function floatBox(){
-      setDisable(false);
-      setTimeout(() =>{
-        setDisable(true);
-      }, 1000)
-    }
 
-    function handleLikeClick(){
-        if(disable){
-            fetch('http://localhost:8000/user/likes/'+id,{
-                method:"PATCH",
-                mode:"cors",
-                credentials: "include", 
-                headers: { 
-                'Content-Type':'application/json',
-                'Accept':'application/json'
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => response.json())
-            .then(data=>{
-                if(data.requireLogin){
-                    navigate('/login')
-                }
-                setLike(data.like);
-                floatBox();
-            }).catch(err => {console.log(err)});
-        }
-    }
-    let temp = (like? "Like":"Unlike");
+
 
 
     return (
@@ -95,16 +62,13 @@ export default function Products() {
         <Header />
 
         <div className='products-body'>
-        {productData.title? <Product {...productData} />: <NotFound />}
-          </div>
-
-        {productData.title? 
-        <div className={'like-btn '+like} onClick={handleLikeClick}>
-            <LikeBtn liked={like}  />
-            <h5 className={"pop-messeage " + disable} >{temp}</h5>
+        {productData[0]&&productImgs[0]? <Product productdata={productData} productImgs={productImgs}/>: <NotFound />}
         </div>
+
+        {productData[0]? 
+        <LikeBtn releasedID={releasedID}  />
         :<p></p>
-          }
+        }
       </div>
     )
 }

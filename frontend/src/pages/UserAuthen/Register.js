@@ -2,7 +2,8 @@ import './Register.css';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/header/Header';
 import {useRef, useState} from 'react'
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 function Register(){
     function handleRegisterMesseage(result, milliseconds) {
         setResult(result);
@@ -24,7 +25,10 @@ function Register(){
           setDisabled(false);
         }, 4000);
         const passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/>.<,])(?!.*\s).{8,16}$/;
-        if(passw.test(formRef.current.password.value)){
+        if(formRef.current.password.value!==formRef.current.cpassword.value){
+            handleRegisterMesseage("Password Mismatch",4000)
+        }
+        else if(passw.test(formRef.current.password.value)){
                     fetch('http://localhost:8000/register',{
                     method:"POST",
                     mode:"cors",
@@ -35,7 +39,8 @@ function Register(){
                         'Accept':'application/json, text/javascript, image/jpg'
                 },
                 body:JSON.stringify({
-                    email: formRef.current.email.value,
+                    email: formRef.current.email.value.toLowerCase(),
+                    displayName: formRef.current.displayName.value,
                     fName: formRef.current.fName.value,
                     lName: formRef.current.lName.value,
                     password: formRef.current.password.value
@@ -49,8 +54,6 @@ function Register(){
             }).then((js)=>{
                 if(js.handle){
                     handleRegisterMesseage(js.handle, 4000);
-                }else{
-
                 }
             })
         }else{
@@ -66,6 +69,17 @@ function Register(){
         navigate('/login');
     }
 
+    const pwdRef= useRef();
+    const cpwdRef= useRef();
+    const [active, setActive] = useState(true);
+
+    function handleClick(ref){
+        setActive(!active);
+        if(ref.current.type=="password") ref.current.type="text";
+        else ref.current.type="password";
+    }
+    
+
     return (
         <div className='register-container'>
             <Header />
@@ -78,16 +92,26 @@ function Register(){
                     method="post" action='http://localhost:8000/register/'>
                     <ul className='form-input-list'>
                         <li>
-                            <input className='form-input' type='text' name="fName" placeholder="First Name" required/>
+                            <input className='form-input' type='text' name="fName" placeholder="First Name" maxLength="30" required/>
                         </li>
                         <li>
-                            <input className='form-input' type='text' name="lName" placeholder="Last Name" required/>
+                            <input className='form-input' type='text' name="lName" placeholder="Last Name" maxLength="30" required/>
+                        </li>
+                        <li>
+                            <input className='form-input' type='text' name="displayName" placeholder="Display Name" maxLength="18" required/>
                         </li>
                         <li> 
-                            <input className='form-input' type='email' name="email" placeholder="Email" required/>
+                            <input className='form-input' type='email' name="email" placeholder="Email / Username" maxLength="22" required/>
                         </li>
                         <li>
-                            <input className='form-input' type='password' name="password" placeholder="Password"/>
+                            <div className="show-pwd" onClick={()=>{handleClick(pwdRef)}}>
+                                <VisibilityOffIcon className={"show-pwd " + active}/>
+                                <VisibilityIcon className={"show-pwd " + !active}/>
+                            </div>
+                            <input className='form-input' type='password' name="password" placeholder="Enter Password" ref={pwdRef} maxLength="22" />
+                        </li>
+                        <li>
+                            <input className='form-input' type='password' name="cpassword" placeholder="Confirm Password" ref={cpwdRef} maxLength="22"/>
                         </li>
                     </ul>
                     <div className="form-btn-container">

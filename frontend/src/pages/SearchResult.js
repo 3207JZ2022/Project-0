@@ -15,11 +15,12 @@ export default function SearchResult() {
         .then(data=>{
             let temp=data.map((x, index)=>{
                 return {
+                    author: x.author,
                     title:x.title,
-                    alt:x.alt,
+                    alt:x.title,
                     description:x.descrip,
-                    src: "http://localhost:8000/imgs/" + x.src,
-                    id: x.id
+                    src: "http://localhost:8000/imgs/" + x.releasedId,
+                    releasedID: x.releasedId
                 }
             })
             setResult(temp);
@@ -27,7 +28,7 @@ export default function SearchResult() {
     }, [params.get('query')])
     
   return (
-    <div className="search-result-container">
+    <div className="search-result-page">
         <Header searchInput={query}/>
         <div className="search-result-display" >
             {  result[0]?

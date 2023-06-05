@@ -58,12 +58,12 @@ function Login(){
                 'Accept': 'application/json, text/javascript, image/jpg'
             },
             body: JSON.stringify({
-                email: formRef.current.email.value,
+                email: formRef.current.email.value.toLowerCase(),
                 password: formRef.current.password.value
             })
         }).then(async (res) => {
             if(res.status===401){
-                handleMesseage("The username or password is incorrect",4000)
+                handleMesseage("Password Mismatch",4000)
             }else{
                 formRef.current.submit();
             }
@@ -76,7 +76,9 @@ function Login(){
     return(
         <div className='login-container'>
             <Header />
-            {loginResult? <h5 className='login-result' style={{whiteSpace: "pre-line"}}>{loginResult}</h5>:""}
+            {loginResult? 
+            <h5 className='login-result' style={{whiteSpace: "pre-line"}}>{loginResult}</h5>
+            :""}
             <div className="form-container">
                 <h1 className='form-title'>Sign In</h1>
                 <form className='login-form' ref={formRef} autoComplete="off " 
@@ -84,7 +86,7 @@ function Login(){
                     method='POST' action="http://localhost:8000/login">
                     <ul className='form-input-list'>
                         <li>
-                            <input className='form-input' name="email" placeholder="Email" />
+                            <input className='form-input' name="email" placeholder="Email / Username" />
                         </li>
                         <li>
                             <input className='form-input' type='password' name="password" placeholder="Password" required minLength={8} maxLength={16}/>

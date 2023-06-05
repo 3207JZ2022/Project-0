@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import './ProfileBtn.css'
 import { useNavigate } from 'react-router';

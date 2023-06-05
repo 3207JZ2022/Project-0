@@ -32,7 +32,7 @@
 .upload-btn{
     position: absolute;
     position: absolute;
-    top: 0px;
+    top: 50px;
     padding: 4px 10px;
     border-radius: 2px;
     border: 0.5px solid rgb(180, 180, 180);
@@ -54,6 +54,15 @@ input[type=file]::file-selector-button:hover{
     border: 0.5px solid rgb(134, 134, 134);
     background-color: rgba(35, 35, 35, 0.6);
     color:rgb(251, 251, 251)
+}
+
+.file-title{
+    position:absolute;
+    top:0px;
+    width: 260px;
+    padding: 0.5em 0.5em;
+    border: 0.5px solid rgb(180, 180, 180);
+    border-radius: 2px;
 }
 
 .file-description{ 
@@ -78,6 +87,8 @@ input[type=file]::file-selector-button:hover{
     left: calc(500px);
     top: 100px;
     width: 120px;
+    color:  rgb(99, 99, 99);
+
 }
 
 .upload-submit-btn{
@@ -108,44 +119,55 @@ input[type=file]::file-selector-button:hover{
 
 @media only screen and (max-width: 720px){
     .upload-work-container{
-        height:160px;
+        height:220px;
+    }
+    .upload-btn{
+        top:0px;
     }
     .upload-submit-btn{
         top:0px;
         left: 300px;
     }
+    .file-title{
+        top:50px;
+        width: 260px;
+    }
+
     .file-description{ 
         left: 0px;
-        top: 50px;
+        top: 100px;
         height: 100px;
         width: 300px;   
         padding: 0px 0.5em;
     }
     .description-limit{
         position:absolute;
-        left: 198px;
-        top: 150px;
+        left: 215px;
+        top: 200px;
     }
 }
 
 @media only screen and (max-width: 540px){
-    .upload-work-container{
-        height:160px;
-    }
+
     .upload-submit-btn{
-        top:0px;
+        top:50px;
         left: calc(100% - 55px);
     }
+    .file-title{
+        top:50px;
+        width: 300px;
+    }
+
     .file-description{ 
         left: 0px;
-        top: 50px;
+        top: 100px;
         height: 100px;
         width: 100%;
         padding: 0px 0.5em;
     }
-        .description-limit{
+    .description-limit{
         position:absolute;
-        left: calc(100% - 100px);
-        top: 150px;
+        left: calc(100% - 85px);
+        top: 200px;
     }
 }

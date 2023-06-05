@@ -32,14 +32,15 @@ function Home(){
                 return {
                     title:x.title,
                     description:x.descrip,
-                    src: "http://localhost:8000/imgs/" + x.src,
-                    id: x.id
+                    author:x.author,
+                    releasedID: x.releasedID,
+                    src: "http://localhost:8000/imgs/" + x.releasedID
                 }
             })
             setNewsData(temp);
         })
 
-        fetch("http://localhost:8000/product",{
+        fetch("http://localhost:8000/popularproducts",{
             method: "GET",
             mode: "cors",
             cache: "no-cache",
@@ -58,8 +59,9 @@ function Home(){
                 return {
                     title:x.title,
                     description:x.descrip,
-                    src: "http://localhost:8000/imgs/" + x.src,
-                    id: x.id
+                    author:x.author,
+                    src: "http://localhost:8000/imgs/" + x.releasedID,
+                    releasedID: x.releasedID
                 }
             })
             setProductData(temp);
@@ -68,13 +70,16 @@ function Home(){
 
 
     return(
-        <div className="home-container">
+        <div className="home-page">
             <Header/>
-            <ProfileBtn />
-            {/* popular */}
-            <PopularProducts productsData={productData}/>
-            {/* news */}
-            {NewsList(newsData)}
+            <div className="home-body">
+                <ProfileBtn />
+                {/* popular */}
+                <PopularProducts productsData={productData}/>
+                {/* news */}
+                {NewsList(newsData)}
+            </div>
+
 
             <Footer /> 
         </div>

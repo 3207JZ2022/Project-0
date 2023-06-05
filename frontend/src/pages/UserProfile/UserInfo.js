@@ -2,6 +2,9 @@ import React from 'react'
 import {useState, useEffect, useRef} from 'react';
 import { useNavigate} from 'react-router';
 import './UserInfo.css'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+
 export default function UserInfo() {
     const [username, setUsername]= useState(null);
     const navigate = useNavigate();
@@ -52,8 +55,11 @@ export default function UserInfo() {
         }, 4000);
 
         const passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{"':;?/>.<,])(?!.*\s).{8,16}$/;
-        if(passwordRef.current.oldPassword.value===passwordRef.current.newPassword.value){
-            handleMesseage("Duplicate Password",4000)
+        if(passwordRef.current.newPassword.value!==passwordRef.current.confirmPassword.value){
+            handleMesseage("Confirm Password Mismatch",4000)
+
+        }else if(passwordRef.current.oldPassword.value===passwordRef.current.newPassword.value){
+            handleMesseage("New Password Must Differ",4000)
         }else if(!passw.test(passwordRef.current.newPassword.value)){
             handleMesseage("Password must have \n"+ 
             "8 to 16 characters,\n"+
@@ -111,7 +117,7 @@ export default function UserInfo() {
                     'Accept': 'application/json, text/javascript, image/jpg'
                 },
                 body: JSON.stringify({
-                    newEmail: emailRef.current.newEmail.value
+                    newEmail: emailRef.current.newEmail.value.toLowerCase()
                 })
             })
             .then((res) => {return res.json();})
@@ -130,6 +136,16 @@ export default function UserInfo() {
             handleMesseage("Invalid E-Mail Address",4000)
         }
     }
+
+    const pwdRef= useRef();
+    const [active, setActive] = useState(true);
+
+    function handleClick(ref){
+        setActive(!active);
+        if(ref.current.type=="password") ref.current.type="text";
+        else ref.current.type="password";
+    }
+    
  
   return (
 <div className='user-info-container'>
@@ -159,10 +175,20 @@ export default function UserInfo() {
                     method='POST' action="http://localhost:8000/changepassword">
                     <ul className='user-form-input-list'>
                         <li>
-                            <input className='user-form-input' type='password' name="oldPassword" placeholder="Enter Old Password" />
+                            <input className='user-form-input' type='password' name="oldPassword" placeholder="Enter Old Password" 
+                                required maxLength="16"/>
+                        </li>
+                        <li className="show-pwd-container">
+                            <div className="profile-show-pwd" onClick={()=>{handleClick(pwdRef)}}>
+                                <VisibilityOffIcon className={"profile-show-pwd " + active}/>
+                                <VisibilityIcon className={"profile-show-pwd " + !active}/>
+                            </div>
+                            <input className='user-form-input' type='password' name="newPassword" placeholder="Enter New Password" 
+                                ref={pwdRef} required minLength={8} maxLength={16}/>
                         </li>
                         <li>
-                            <input className='user-form-input' type='password' name="newPassword" placeholder="Enter New Password" required minLength={8} maxLength={16}/>
+                            <input className='user-form-input' type='password' name="confirmPassword" placeholder="Confirm New Password" 
+                                required minLength={8} maxLength={16}/>
                         </li>
                     </ul>
                     <button className='change-btn' type="submit" disabled={disabled}>Change</button>

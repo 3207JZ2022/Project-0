@@ -3,11 +3,17 @@ var router = express.Router();
 const connection = require('../config/mySQL.js')
 const path = require('path');
 
+router.get("/imgs/:displayName/:id", function(req, res){
+    const src= req.params.displayName+"\\"+req.params.id;
+    res.sendFile(path.join(__dirname,"../destination",src));
+})
+
 router.get("/news", function(req, res){
     connection.query(
-        "SELECT title, descrip, src, id FROM news GROUP BY releasedID ORDER BY date DESC LIMIT 6;",
+        "SELECT title, descrip, author, releasedID FROM post GROUP BY releasedID ORDER BY date DESC LIMIT 1;",
         function(err, results, fields) {
             if(err){
+                console.log(err);
                 res.send([]);
                 return;
             }
@@ -16,16 +22,17 @@ router.get("/news", function(req, res){
     );
 })
 
-router.get('/product', function(req, res){
-    var limit = 2;
+router.get('/popularproducts', function(req, res){
+    var limit = 1;
     if(req.isAuthenticated()){
         limit=5;
     }
     connection.query(
-        'SELECT title, src, id FROM news GROUP BY releasedID ORDER BY likes DESC LIMIT ?',
+        "SELECT title, descrip, author, releasedID FROM post GROUP BY releasedID ORDER BY likes DESC LIMIT ?;",
         [limit],
         function(err, results, fields) {
             if(err){
+                console.log(err);
                 res.send([]);
                 return;
             }
@@ -34,47 +41,40 @@ router.get('/product', function(req, res){
     );
 })
 
-router.get("/product/:id", function(req, res){
-    const id = req.params.id;
+
+router.get("/search/:query",function(req, res){
+    const query= req.params.query;
     connection.query(
-        'SELECT * FROM news WHERE releasedID = (SELECT releasedID FROM news WHERE id = ?) ',
-        [id],
-        function(err, results, fields) {
+        "select author, title, descrip, releasedId from post where title like ?;",
+        ['%'+query+'%'],
+        function(err, results, fields){
             if(err){
                 res.send([]);
                 return;
             }
             res.send(results);
         }
-    );  
+    )
 })
-
-
-
-router.get('/profileLikedImgs/:src', (req, res) => {
-    const src=req.params.src;
-    res.sendFile(path.join(__dirname,".." ,src));
-})
-
-router.get("/search/:query",function(req, res){
-        const query= req.params.query;
-        connection.query(
-            "select title, descrip, src, id from news where title like ? group by releasedID;",
-            ['%'+query+'%'],
-            function(err, results, fields){
-                if(err){
-                    res.send([]);
-                    return;
-                }
-                res.send(results);
+router.get("/imgs/:releasedID", function(req, res){
+    const releasedID = req.params.releasedID;
+    connection.query(
+        "SELECT src FROM collection WHERE releasedID = ? ;", [releasedID],
+        function(err, results, fields) {
+            if(err){
+                console.log(err);
+                res.send([]);
+                return;
             }
-        )
+            if(results[0]){
+                res.sendFile(path.join(__dirname,"../destination" ,results[0].src));
+            }else{
+                res.send();
+            }
+        }
+    );
 })
 
-router.get('/profileLikedImgs/destination/:username/:src', (req, res) => {
-    const username = req.params.username
-    const src=req.params.src;
-    res.sendFile(path.join(__dirname,"..","destination",username,src));
-})
+
 
 module.exports = router;

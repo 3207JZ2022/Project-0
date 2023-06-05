@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router(); 
 const User = require('../config/userSchema')
 const connection = require('../config/mySQL.js')
-const path = require('path');
 const fs = require('fs');
 
 router.get('/profile',(req,res) => {
@@ -21,8 +20,7 @@ router.post('/profile',(req,res) => {
     }
 })
 
-
-router.post('/profile/:username',(req,res) => {
+router.post('/profile/favorite/:username',(req,res) => {
     if(req.isAuthenticated()){
         if(req.user.username=== req.params.username){
             User.findOne({ username: req.user.username })
@@ -30,30 +28,34 @@ router.post('/profile/:username',(req,res) => {
                 if(foundUser){
                     if(!foundUser.likedItems){
                         res.send({noItems: true});
-                    }else{
-                        const arr= foundUser.likedItems.substring(0,foundUser.likedItems.length - 1).split(" ");
-                        connection.query(
-                            "SELECT title, id, src FROM news WHERE id in (?)",
-                            [arr],
-                            function(err, results, fields) {
-                                if(err){
-                                    res.send([]);
-                                    return;
-                                }
-                                res.send({data:results});
+                        return;
+                    }
+                    const arr= foundUser.likedItems.substring(0,foundUser.likedItems.length - 1).split(" ");
+                    connection.query(
+                        "SELECT title, src, post.releasedId FROM post LEFT JOIN collection "+
+                        "ON post.releasedId = collection.releasedId "+
+                        "WHERE post.releasedId in (?) GROUP BY post.title;",
+                        [arr],
+                        function(err, results, fields) {
+                            if(err){
+                                res.send([]);
+                                return;
                             }
-                        )
+                            res.send({data:results});
                         }
+                    )
                 }else{
                     res.send({data:null});
                 }
             })
             .catch(err => {console.log(err)});
         }
+
     }else{
         res.send({});        
     }
 });
+
 
 router.post('/profile/userworks/:username', (req, res) => {
     if(!req.isAuthenticated()||(!req.user.username=== req.params.username)){
@@ -61,8 +63,10 @@ router.post('/profile/userworks/:username', (req, res) => {
         return;  
     }
     connection.query(
-        "SELECT title, id, src FROM news WHERE author = ?;",
-        [req.user.username],
+        "SELECT title, src, post.releasedId FROM post LEFT JOIN collection "+
+        "ON post.releasedId = collection.releasedId "+
+        "WHERE author = ? GROUP BY post.releasedId;",
+        [req.user.displayName],
         function(err, results, fields) {
             if(err){
                 res.send({handle: "An Error Occurred, Please Try Again Later"});
@@ -76,24 +80,21 @@ router.post('/profile/userworks/:username', (req, res) => {
 
 router.post('/profile/works/upload', (req, res) => {
     const file = req.files.file;
-    const description = req.body.description;  
-    // check if file or directory exist
-    if (!fs.existsSync( "destination/"+req.user.username)) {
-        fs.mkdirSync("destination/"+req.user.username);
+    // check if directory exist
+    if (!fs.existsSync( "destination/"+req.user.displayName)) {
+        fs.mkdirSync("destination/"+req.user.displayName);
     }
-    if(fs.existsSync( "destination/"+req.user.username+"/"+file.name)){
-        res.send({handle:"A Duplicate File Name Exists"});
-        return;
-    }
-    // insert into mySQL
+
     connection.beginTransaction((err) =>{
         if(err) throw err;
-        const username=req.user.username, title = path.parse(file.name).name, 
-        filePath= "destination\\"+req.user.username+"\\", fileExtension = '.'+file.name.split('.').pop();
+        const author=req.user.displayName, 
+        title = req.body.title,
+        description = req.body.description,
+        fileExtension = '.'+file.name.split('.').pop();
         connection.query(
-            "INSERT INTO news (author, title, descrip, src, id, releasedID)"
-            +"select ?,?,? ,CONCAT(CONCAT(?, CONCAT(MAX(releasedID) +1, '_0') ), ?), CONCAT(MAX(releasedID) +1, '_0'), MAX(releasedID) +1     FROM news",
-            [username, title, description, filePath, fileExtension],
+            "INSERT INTO post (author, title, descrip)"
+            +"SELECT ?,?,?;",
+            [author, title, description],
             function(err, results, fields) {
                 if(err){
                     res.send({handle: "An Error Occurred, Please Try Again Later"});
@@ -104,24 +105,24 @@ router.post('/profile/works/upload', (req, res) => {
                         res.send({handle: "An Error Occurred, Please Try Again Later"});
                         return connection.rollback(() => {
                             throw err;
-                          });
+                        });
                     }
                     connection.query(
-                        "SELECT id FROM news where title = ?",
-                        [title],
-                        function(err, results, fields) {
+                        "INSERT INTO collection (src, releasedId) SELECT ?, ?",
+                        [author+"\\"+results.insertId+"_p0"+fileExtension, results.insertId],
+                        function(err, results1, fields) {
                             if(err){
                                 res.send({handle: "An Error Occurred, Please Try Again Later"});
                                 return;
                             }
-                            file.mv("destination/"+req.user.username+"/"+results[0].id+fileExtension, (err) => {
+                            file.mv("destination\\"+author+"\\"+results.insertId+"_p0"+fileExtension, (err) => {
                                 if (err) {
                                   console.error(err);
                                   return res.status(500).send({handle: "An Error Occurred, Please Try Again Later"});
                                 }else{
                                     res.send({});
                                 }
-                            })
+                            }) 
                         }
                     )
                 })
@@ -136,7 +137,7 @@ router.patch('/updateUserEmail', (req, res) => {
         return;
     }
     const newEmail = req.body.newEmail;
-    User.findOne({username: newEmail})
+    User.findOne({email: newEmail})
     .then((foundUser)=>{
         if(foundUser){
             res.send({handle:"This E-mail is Already Registered"})
@@ -166,7 +167,7 @@ router.patch('/updateUserPassword', (req, res) => {
         if(foundUser){
             foundUser.changePassword(oldPassword, newPassword, function(err){
                 if(err){
-                    res.send({handle:"incorrect old password"})
+                    res.send({handle:"Incorrect Old Password"})
                     return;
                 };
                 res.send({success:"Updated Password"});

@@ -9,8 +9,8 @@ export default function PopularProducts({productsData, ind}) {
 
     const navigate=useNavigate();
     function navToProduct(product){
-        const id =productsData[product].id;
-        navigate('/products?id=' +id )
+        const releasedID =productsData[product].releasedID;
+        navigate('/products?releasedID=' +releasedID )
     }
     
 
