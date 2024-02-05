@@ -22,6 +22,7 @@ export default function UserFavorites() {
             return response.json();
         })
         .then((result)=>{
+            console.log(result)
             if(result.username){
               setUsername("favorite/"+result.username);
             }else{

@@ -13,12 +13,22 @@ export default function Products() {
     const navigate = useNavigate();
 
     // load page
-    const[productData, setProductData] = useState({})
+    // const[productData, setProductData] = useState({})
+    const[productData, setProductData] = useState([{data:"1"}])
     const[productImgs, setProductImgs] = useState([]);
 
     // obtain product information
     useEffect(()=>{
-        fetch("http://localhost:8000/product/" + releasedID )
+        fetch("http://localhost:8000/product/" + releasedID,{
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            credentials: "include", 
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json, text/javascript, image/jpg'
+            }
+        })
         .then(response => response.json())
         .then(data=>{
             let temp=data.map((x, index)=>{
@@ -60,9 +70,9 @@ export default function Products() {
     return (
       <div className='products-page' >
         <Header />
-
         <div className='products-body'>
-        {productData[0]&&productImgs[0]? <Product productdata={productData} productImgs={productImgs}/>: <NotFound />}
+        {productData[0]? <Product productdata={productData} productImgs={productImgs}/>: <NotFound />}
+
         </div>
 
         {productData[0]? 

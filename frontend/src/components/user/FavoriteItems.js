@@ -28,6 +28,7 @@ export default function FavoriteItems(props) {
           return response.json();
       })
       .then((result)=>{
+        console.log(result)
           if(result.data){
               setItems(result.data);
           }

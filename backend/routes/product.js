@@ -9,6 +9,7 @@ router.get("/product/:releasedID",function(req, res){
         "SELECT author, title, descrip FROM post WHERE releasedID = ?;",
         [releasedID],
         function(err, results, fields){
+            console.log(results)
             if(err){
                 res.send([]);
                 return;
@@ -39,12 +40,16 @@ router.get("/productthumblist/:username/:id",function(req, res){
         "SELECT src FROM collection WHERE src = ?;",
         [src],
         function(err, results, fields){
+            console.log(results)
+
             if(err){
                 console.log("err", err);
                 res.send([]);
                 return;
             }
             if(results[0]){
+            console.log("found")
+
                 res.sendFile(path.join(__dirname,"../destination" ,results[0].src));
             }else{
                 res.send();

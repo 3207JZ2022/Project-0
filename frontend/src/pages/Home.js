@@ -8,11 +8,21 @@ import ProfileBtn from '../components/user/ProfileBtn';
 import {useState} from 'react';
 
 
+import homeStore from '../store/homeStore';
+import { sendAction } from '../store/action/home';
+
 function Home(){
     // load page
     const[newsData, setNewsData] = useState([0])
     const[productData, setProductData] = useState([0])
     useEffect(()=>{
+
+        const sub= homeStore.subscribe(()=>{
+            console.log(homeStore.getState());
+
+        })
+        homeStore.dispatch(sendAction());
+
         fetch("http://localhost:8000/news",{
             method: "GET",
             mode: "cors",
@@ -66,7 +76,12 @@ function Home(){
             })
             setProductData(temp);
         })
-    }, [])
+
+        return ()=>{
+            sub();
+        }
+    }, []
+    )
 
 
     return(

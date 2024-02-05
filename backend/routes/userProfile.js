@@ -26,21 +26,26 @@ router.post('/profile/favorite/:username',(req,res) => {
             User.findOne({ username: req.user.username })
             .then((foundUser)=>{
                 if(foundUser){
+                    console.log("find user")
                     if(!foundUser.likedItems){
                         res.send({noItems: true});
                         return;
                     }
                     const arr= foundUser.likedItems.substring(0,foundUser.likedItems.length - 1).split(" ");
+                    console.log(arr)
                     connection.query(
-                        "SELECT title, src, post.releasedId FROM post LEFT JOIN collection "+
+                        "SELECT ANY_VALUE(title) as title, ANY_VALUE(src) as src, post.releasedId FROM post LEFT JOIN collection "+
                         "ON post.releasedId = collection.releasedId "+
-                        "WHERE post.releasedId in (?) GROUP BY post.title;",
+                        "WHERE post.releasedId in (?) GROUP BY post.releasedId;",
                         [arr],
                         function(err, results, fields) {
                             if(err){
+                                console.log(err)
                                 res.send([]);
                                 return;
                             }
+                    console.log("find user favorite")
+
                             res.send({data:results});
                         }
                     )
