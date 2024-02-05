@@ -55,10 +55,7 @@ Create two tables as follows:
 3. Use the website to upload your artwork. 
 
 ## Updates
-* The like-button now updates the data properly.
-* Implement show-password functionality for the registration and change password pages.
-* Remove any APIs that are no longer in use.
-* Redesign the database.
+* Change frontend render logic.
 
 ## Known Issues 
 * Potential race condition when multiple users like the same work at the same time.
